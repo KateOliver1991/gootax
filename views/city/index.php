@@ -2,7 +2,10 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use yii\helpers\Url;
+
+
+
+
 
 /* @var $this yii\web\View */
 
@@ -46,47 +49,37 @@ use yii\helpers\Url;
             <?php
         } else {
             ?>
-            <p class="lead">Ваш город: <?= $session["city"]; ?></p>
+            <p class="lead">Ваш город: <?= $session["city"]["name"]; ?></p>
             <?php
 
         }
-		?>
-		<style>
-		th{
-			text-align:center;
-		}
-		</style>
-		<?php
+        ?>
+        <style>
+            th {
+                text-align: center;
+            }
+        </style>
+        <?php
 
-if(!empty($model->recalls)){
-	
-	
-
-	echo "<table class='table table-bordered table-striped'>";
-	echo "<thead>";
-	echo "<th>Дата создания</th><th>Название</th><th>Описание</th><th>Рейтинг</th><th>Изображение</th><th>Автор</th>";
-	echo "</thead>";
-	echo "<tbody>";
-	foreach($model->recalls as $recall){
-		echo "<tr><td>".$recall->date_create."</td>"."<td>".$recall->title."</td>"."<td>".$recall->text."</td>"."<td>".$recall->rating."</td><td>".$recall->img.".jpg"."</td><td>".$recall["users"]->fio."</td></tr>";
-	}
-	echo "</tbody>";
-	echo "</table>";
-
-}
+        if (!empty($model) && !empty($model->recalls)) {
 
 
+            echo "<table class='table table-bordered table-striped'>";
+            echo "<thead>";
+            echo "<th>Дата создания</th><th>Название</th><th>Описание</th><th>Рейтинг</th><th>Изображение</th><th>Автор</th>";
+            echo "</thead>";
+            echo "<tbody>";
+            foreach ($model->recalls as $recall) {
+                echo "<tr><td>" . $recall->date_create . "</td>" . "<td>" . $recall->title . "</td>" . "<td>" . $recall->text . "</td>" . "<td>" . $recall->rating . "</td><td>" . $recall->img . ".jpg" . "</td><td>" . $recall["users"]->fio . "</td></tr>";
+            }
+            echo "</tbody>";
+            echo "</table>";
 
-?>
+        }
 
-	
-	<?php
-	
-	
-	?>
+        ?>
 
 
-        
 
 
 

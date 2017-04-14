@@ -18,8 +18,8 @@ class CityController extends Controller
 
     public function init()
     {
-        ini_set("session.gc_maxlifetime", 10);
-        ini_set('session.cookie_lifetime', 5);
+
+
     }
 
 
@@ -65,6 +65,7 @@ class CityController extends Controller
         ];
     }
 
+
     /**
      * Displays homepage.
      *
@@ -74,6 +75,7 @@ class CityController extends Controller
 
     public function actionIndex()
     {
+
 
         $model = new IsYourCity();
 
@@ -87,7 +89,7 @@ class CityController extends Controller
 
             if ($model->is_your_city == "yes") {
 
-                Yii::$app->session["city"] = $model->city;
+                Yii::$app->session["city"] = ["name" => $model->city, "date" => time()];
 
                 $this->refresh();
 
@@ -97,21 +99,45 @@ class CityController extends Controller
 
             }
 
-        } else {
-			
-			if(isset(Yii::$app->session["city"])){
-			
-				$model2 = new Recalls();
-			
-				$model->recalls = $model2->recalls;
-				
-	
-	
-			}
-
-            return $this->render('index', ["model" => $model]);
-			
         }
+
+        if (isset(Yii::$app->session["city"])) {
+
+            $model2 = new Recalls();
+
+            $model->recalls = $model2->recalls;
+
+
+            if (Yii::$app->request->isAjax) {
+
+                ini_set('max_execution_time', 0);
+
+
+
+                while (1) {
+
+                    $time = time() - Yii::$app->session["city"]["date"];
+
+
+                    if ($time >= 5) {
+
+                        unset(Yii::$app->session["city"]);
+
+                        Yii::$app->response->format = 'json';
+
+                        return ['time' => $time];
+
+                    }
+
+                }
+
+
+            }
+
+        }
+
+
+        return $this->render('index', ["model" => $model]);
 
 
     }
@@ -126,8 +152,8 @@ class CityController extends Controller
 
             $model->attributes = $_POST["ChooseCity"];
 
-            Yii::$app->session["city"] = $model->city;
-			
+            Yii::$app->session["city"] = ["name" => $model->city, "date" => time()];
+
             return $this->redirect(Url::to(Url::base() . "/city"));
 
         } else {
