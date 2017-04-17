@@ -27,8 +27,7 @@ use yii\widgets\ActiveForm;
             <p class="lead"> <?= $model->city ?> ваш город?</p>
             <?php
             $form = ActiveForm::begin([
-                'id' => 'login-form',
-
+                'id' => 'is_your_city',
                 'options' => ['class' => 'form-horizontal'],
             ]) ?>
             <?= $form->field($model, 'is_your_city')->radioList([

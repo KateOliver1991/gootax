@@ -9,6 +9,7 @@ use yii\filters\VerbFilter;
 use app\models\IsYourCity;
 use app\models\ChooseCity;
 use app\models\Recalls;
+use app\models\Users;
 use yii\helpers\Url;
 
 
@@ -58,10 +59,12 @@ class CityController extends Controller
             'error' => [
                 'class' => 'yii\web\ErrorAction',
             ],
+
             'captcha' => [
                 'class' => 'yii\captcha\CaptchaAction',
                 'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
             ],
+
         ];
     }
 
@@ -75,6 +78,25 @@ class CityController extends Controller
 
     public function actionIndex()
     {
+
+        $model = new Users();
+
+        $model->setScenario("check");
+
+        if (isset($_GET["id"]) && isset($_GET["key"])) {
+
+            if ($account = $model->checkKey($_GET["id"], $_GET["key"])) {
+
+                if ($account == "success") {
+
+                    return $this->render("success_account");
+
+                } else if ($account == "activated") {
+                    return $this->render("account_is_activated");
+                }
+
+            }
+        }
 
 
         $model = new IsYourCity();
@@ -111,8 +133,6 @@ class CityController extends Controller
             if (Yii::$app->request->isAjax) {
 
                 ini_set('max_execution_time', 0);
-
-
 
                 while (1) {
 
@@ -163,6 +183,45 @@ class CityController extends Controller
             return $this->render('Choose', ["model" => $model, "cities" => $list]);
 
         }
+
+    }
+
+    public function actionRegistration()
+    {
+        $model = new Users();
+
+        $model->setScenario("register");
+
+
+        if ($model->load(Yii::$app->request->post())) {
+
+
+            $model->key_auth = md5($model->id);
+
+
+            if ($model->save()) {
+
+
+                /*
+            Yii::$app->mailer->compose()
+    ->setFrom('from@domain.com')
+    ->setTo($model->email)
+    ->setSubject('Активация аккаунта')
+    ->setTextBody('Перейдите по ссылке:')
+    ->setHtmlBody("<a href='сайт'>сайт?id=".$model->id."&key=".$model->key_auth."</a>")
+    ->send();
+            */
+
+
+                $this->refresh();
+            }
+
+
+        }
+
+
+        return $this->render("Registration", ["model" => $model]);
+
 
     }
 
