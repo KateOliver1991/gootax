@@ -3,18 +3,18 @@
 namespace app\controllers;
 
 use Yii;
-use yii\filters\AccessControl;
 use yii\web\Controller;
-use yii\filters\VerbFilter;
 use app\models\IsYourCity;
 use app\models\ChooseCity;
 use app\models\Recalls;
 use app\models\Users;
-use yii\helpers\Url;
+
 
 
 class CityController extends Controller
 {
+
+    public $layout = 'gootax';
 
 
     public function init()
@@ -27,6 +27,8 @@ class CityController extends Controller
     /**
      * @inheritdoc
      */
+
+    /*
     public function behaviors()
     {
         return [
@@ -49,6 +51,8 @@ class CityController extends Controller
             ],
         ];
     }
+
+    */
 
     /**
      * @inheritdoc
@@ -117,7 +121,7 @@ class CityController extends Controller
 
             } else if ($model->is_your_city == "no") {
 
-                return $this->redirect(Url::to(Url::base() . "/city/choose"));
+                return $this->redirect(["/city/choose"]);
 
             }
 
@@ -174,7 +178,7 @@ class CityController extends Controller
 
             Yii::$app->session["city"] = ["name" => $model->city, "date" => time()];
 
-            return $this->redirect(Url::to(Url::base() . "/city"));
+            return $this->redirect(["/city"]);
 
         } else {
 
@@ -199,30 +203,62 @@ class CityController extends Controller
             $model->key_auth = md5($model->id);
 
 
-            if ($model->save()) {
+            $model->password = Yii::$app->getSecurity()->generatePasswordHash($model->password);
+
+            $model->password_repeat = $model->password;
 
 
-                /*
-            Yii::$app->mailer->compose()
-    ->setFrom('from@domain.com')
-    ->setTo($model->email)
-    ->setSubject('Активация аккаунта')
-    ->setTextBody('Перейдите по ссылке:')
-    ->setHtmlBody("<a href='сайт'>сайт?id=".$model->id."&key=".$model->key_auth."</a>")
-    ->send();
-            */
+            $model->save();
 
 
-                $this->refresh();
-            }
+            /*
+        Yii::$app->mailer->compose()
+->setFrom('from@domain.com')
+->setTo($model->email)
+->setSubject('Активация аккаунта')
+->setTextBody('Перейдите по ссылке:')
+->setHtmlBody("<a href='сайт'>сайт?id=".$model->id."&key=".$model->key_auth."</a>")
+->send();
+        */
+            Yii::$app->session->setFlash('success_register', 'Регистрация выполнена успешно! Для активации аккаунта необходимо перейти по ссылке в электронном письме.');
+            $this->redirect(["city/"]);
 
 
         }
 
-
         return $this->render("Registration", ["model" => $model]);
 
 
+    }
+
+
+    public function actionLogin()
+    {
+        $model = new Users();
+
+        $model->setScenario("login");
+
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            if ($model->checkStatus($model->email)) {
+                Yii::$app->response->cookies->add(new \yii\web\Cookie([
+                    'name' => 'login',
+                    'value' => $model->email
+                ]));
+                Yii::$app->session->setFlash('success', 'Вход успешно выполнен!');
+                return $this->redirect(["city/"]);
+            } else {
+                return $this->render("account_is_not_activated");
+            }
+        }
+
+        return $this->render("Login", ["model" => $model]);
+    }
+
+
+    public function actionLogout()
+    {
+        unset(Yii::$app->response->cookies["login"]);
+        return $this->redirect(["city/"]);
     }
 
 

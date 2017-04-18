@@ -16,6 +16,26 @@ use yii\widgets\ActiveForm;
     <div class="jumbotron">
 
         <?php
+
+
+
+        if(Yii::$app->session->getFlash('success')){
+            echo "<div class='alert alert-success'>";
+            echo Yii::$app->session->getFlash('success');
+            echo "</div>";
+        }
+
+        if(Yii::$app->session->getFlash('success_register')){
+            echo "<div class='alert alert-info'>";
+            echo Yii::$app->session->getFlash('success_register');
+            echo "</div>";
+        }
+
+
+
+
+
+
         $session = Yii::$app->session;
 
         if (empty($session["city"])) {
