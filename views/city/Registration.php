@@ -4,7 +4,7 @@ use yii\helpers\Html;
 
 $this->title = "Регистрация нового пользователя";
 ?>
-<h2 class="text-center">Регистрация нового пользователя</h2>
+<h2 class="text-center"><?=$this->title?></h2>
 
 <?php
 $form = ActiveForm::begin([

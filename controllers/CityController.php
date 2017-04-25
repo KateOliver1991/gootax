@@ -10,9 +10,12 @@ use app\models\Recalls;
 use app\models\Users;
 
 
-
 class CityController extends Controller
 {
+
+
+    public $enableCsrfValidation = false;
+
 
     public $layout = 'gootax';
 
@@ -105,7 +108,7 @@ class CityController extends Controller
 
         $model = new IsYourCity();
 
-        $ip_info = $model->IP("91.146.47.84");
+        $ip_info = $model->IP("91.146.47.85");
 
         $model->city = $ip_info->city;
 
@@ -134,35 +137,56 @@ class CityController extends Controller
             $model->recalls = $model2->recalls;
 
 
-            if (Yii::$app->request->isAjax) {
+            $this->view->registerJsFile('js/ajax.js');
 
-                ini_set('max_execution_time', 0);
-
-                while (1) {
-
-                    $time = time() - Yii::$app->session["city"]["date"];
-
-
-                    if ($time >= 5) {
-
-                        unset(Yii::$app->session["city"]);
-
-                        Yii::$app->response->format = 'json';
-
-                        return ['time' => $time];
-
-                    }
-
-                }
-
-
-            }
 
         }
 
 
         return $this->render('index', ["model" => $model]);
 
+
+    }
+
+
+    public function actionCheckSession()
+    {
+
+        if (Yii::$app->request->isAjax) {
+
+
+            $time = time() - Yii::$app->session["city"]["date"];
+
+
+            if ($time >= 2 * 3600) {
+
+                unset(Yii::$app->session["city"]);
+
+                Yii::$app->response->format = 'json';
+
+                return ['time' => $time];
+
+            }
+
+
+        }
+
+        return true;
+
+
+    }
+
+
+    public function actionRecalls()
+    {
+
+        $model = new Recalls();
+
+        if (isset($model->recalls)) {
+            return $this->render("recalls", ["model" => $model, "dataProvider" => $model->recalls["dataProvider"]]);
+        } else {
+            return $this->render("recalls", ["template" => "<div class='alert alert-info'>Войдите в свою учетную запись, чтобы видеть отзывы</div>"]);
+        }
 
     }
 
@@ -178,7 +202,7 @@ class CityController extends Controller
 
             Yii::$app->session["city"] = ["name" => $model->city, "date" => time()];
 
-            return $this->redirect(["/city"]);
+            return $this->redirect(["/city/"]);
 
         } else {
 
@@ -234,11 +258,15 @@ class CityController extends Controller
 
     public function actionLogin()
     {
+
+
         $model = new Users();
 
         $model->setScenario("login");
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+
+
             if ($model->checkStatus($model->email)) {
                 Yii::$app->response->cookies->add(new \yii\web\Cookie([
                     'name' => 'login',
@@ -257,9 +285,117 @@ class CityController extends Controller
 
     public function actionLogout()
     {
+
         unset(Yii::$app->response->cookies["login"]);
         return $this->redirect(["city/"]);
     }
 
+    public function actionSelectRecall()
+    {
+        $model = new Recalls();
+        if (isset(Yii::$app->request->cookies["login"])) {
+
+            $cities = ChooseCity::find()
+                ->select(['name as value', 'name as label'])
+                ->asArray()
+                ->all();
+
+            return $this->render("selectRecall", ["model" => $model, "cities" => $cities]);
+        } else {
+            return $this->render("selectRecall", ["template" => "<div class='text-center alert alert-info'>Войдите в свой аккаунт, чтобы добавить отзыв</div>"]);
+        }
+    }
+
+
+    public function actionLoadCities()
+    {
+
+
+        if (Yii::$app->request->isAjax) {
+
+            //ini_set('max_execution_time', 0);
+
+            $cities = ['Пермь', 'Воткинск', 'Сарапул'];
+
+            Yii::$app->response->format = 'json';
+
+            return ['cities' => $cities];
+
+
+        }
+
+        return true;
+
+
+    }
+
+    public function actionAddRecall()
+    {
+
+        $model = new Recalls();
+
+        if ($model->load(Yii::$app->request->post())) {
+
+            $user = Users::findOne(["email" => YII::$app->request->cookies["login"]]);
+            $model->id_author = $user->id;
+            $city = ChooseCity::findOne(["name" => $model->city]);
+            $model->id_city = $city->id;
+
+            if ($model->save()) {
+                //return $this->redirect(["city/recalls"]);
+            } else {
+                var_dump($model->errors);
+            }
+
+        }
+
+        return $this->render("recalls", ["model" => $model, "dataProvider" => $model->recalls["dataProvider"]]);
+
+    }
+
+    public function actionDelRecall()
+    {
+
+        if (Yii::$app->request->isAjax) {
+
+            $data = Yii::$app->request->get();
+
+            $time = $data["id"];
+
+            $recall = Recalls::findOne($data["id"]);
+
+            $recall->delete();
+
+            Yii::$app->response->format = 'json';
+
+            return ["time" => $time];
+
+
+        }
+
+        return true;
+
+    }
+
+
+    public function actionDelete()
+    {
+        $id = Yii::$app->request->get();
+        $recall = Recalls::findOne($id);
+        $recall->delete();
+        return $this->redirect("recalls");
+    }
+
+
+    public function actionUpdate()
+    {
+        $id = Yii::$app->request->get();
+        $recall = Recalls::findOne($id);
+        if (!$recall->update()) {
+            $recall->errors;
+        }
+
+        return $this->redirect("recalls");
+    }
 
 }

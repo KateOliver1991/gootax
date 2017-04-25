@@ -21,7 +21,9 @@ class AppAsset extends AssetBundle
         'css/site.css',
     ];
     public $js = [
-        'js/ajax.js'
+        'js/load_cities.js',
+        'js/add_edit_recall.js',
+		'js/del_recall.js',
     ];
     public $depends = [
         'yii\web\YiiAsset',

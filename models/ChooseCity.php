@@ -2,9 +2,6 @@
 
 namespace app\models;
 
-use Yii;
-
-use SimpleXMLElement;
 
 /**
  * This is the model class for table "cities".
@@ -17,15 +14,14 @@ class ChooseCity extends \yii\db\ActiveRecord
 {
 
 
-
     public $city;
 
 
- public function getRecalls()
+    public function getRecalls()
     {
         return $this->hasOne(Recalls::className(), ['id_city' => 'id']);
     }
-  
+
 
     public static function tableName()
     {
@@ -51,15 +47,17 @@ class ChooseCity extends \yii\db\ActiveRecord
     }
 
 
-    public function getList()
+    public static function getList()
     {
-			
-        $data = $this->find()->joinWith('recalls')->where('recalls.id_city = cities.id')->orderBy("name")->all();
+
+        $data = self::getDb()->cache(function ($db) {
+
+            return self::find()->joinWith('recalls')->where('recalls.id_city = cities.id')->orderBy("name")->all();
+
+        });
 
         return $data;
     }
-
-
 
 
 }

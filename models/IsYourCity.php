@@ -63,7 +63,9 @@ class IsYourCity extends \yii\db\ActiveRecord
 
 
     public function getList(){
-        $data = $this->find()->orderBy("name")->all();
+        $data = $this->getDb()->cache(function ($db) {
+            return $this->find()->orderBy("name")->all();
+        });
         return $data;
     }
 
@@ -103,7 +105,10 @@ class IsYourCity extends \yii\db\ActiveRecord
 	
 	
 	public function getCityId(){
-		return $this->find("id")->where(["name"=>Yii::$app->session["city"]])->one();
+        $data = $this->getDb()->cache(function ($db) {
+            return $this->find("id")->where(["name" => Yii::$app->session["city"]])->one();
+        });
+        return $data;
 	}
 
 

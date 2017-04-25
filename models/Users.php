@@ -24,6 +24,7 @@ class Users extends \yii\db\ActiveRecord
     public $verifyCode;
 
 
+
     /**
      * @inheritdoc
      */

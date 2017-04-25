@@ -36,7 +36,8 @@ AppAsset::register($this);
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
-            ['label' => 'Home', 'url' => ['/city/']],
+            ['label' => 'Домой', 'url' => ['/city/']],
+			['label' => 'Отзывы', 'url' => ['/city/recalls']],
             !isset(Yii::$app->request->cookies["login"]) ? (
                 ['label' => 'Login', 'url' => ['/city/login']]
             ) : (

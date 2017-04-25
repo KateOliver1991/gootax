@@ -73,31 +73,6 @@ use yii\widgets\ActiveForm;
 
         }
         ?>
-        <style>
-            th {
-                text-align: center;
-            }
-        </style>
-        <?php
-
-        if (!empty($model) && !empty($model->recalls)) {
-
-
-            echo "<table class='table table-bordered table-striped'>";
-            echo "<thead>";
-            echo "<th>Дата создания</th><th>Название</th><th>Описание</th><th>Рейтинг</th><th>Изображение</th><th>Автор</th>";
-            echo "</thead>";
-            echo "<tbody>";
-            foreach ($model->recalls as $recall) {
-                echo "<tr><td>" . $recall->date_create . "</td>" . "<td>" . $recall->title . "</td>" . "<td>" . $recall->text . "</td>" . "<td>" . $recall->rating . "</td><td>" . $recall->img . ".jpg" . "</td><td>" . $recall["users"]->fio . "</td></tr>";
-            }
-            echo "</tbody>";
-            echo "</table>";
-
-        }
-
-        ?>
-
 
 
 

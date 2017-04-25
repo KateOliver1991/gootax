@@ -4,6 +4,9 @@ namespace app\models;
 
 use Yii;
 
+use yii\data\ActiveDataProvider;
+
+
 /**
  * This is the model class for table "recalls".
  *
@@ -18,6 +21,8 @@ use Yii;
  */
 class Recalls extends \yii\db\ActiveRecord
 {
+    public $city;
+
     /**
      * @inheritdoc
      */
@@ -25,13 +30,13 @@ class Recalls extends \yii\db\ActiveRecord
     {
         return 'recalls';
     }
-	
-	
-	public function getUsers()
+
+
+    public function getUsers()
     {
-        return $this->hasOne(Users::className(), ['id' => 'id']);
+        return $this->hasOne(Users::className(), ['id' => 'id_author']);
     }
-  
+
 
     /**
      * @inheritdoc
@@ -39,8 +44,8 @@ class Recalls extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'id_city', 'title', 'text', 'rating', 'img', 'id_author'], 'required'],
-            [['id', 'id_city', 'rating', 'id_author'], 'integer'],
+            [['city', 'title', 'text', 'rating', 'img'], 'required'],
+            [['id_city', 'rating', 'id_author'], 'integer'],
             [['date_create'], 'safe'],
             [['title', 'text'], 'string', 'max' => 30],
             [['img'], 'string', 'max' => 11],
@@ -63,13 +68,43 @@ class Recalls extends \yii\db\ActiveRecord
             'date_create' => 'Date Create',
         ];
     }
-	
-	public function getRecalls(){
-		
-		$city_id = IsYourCity::find("id")->where(["name"=>Yii::$app->session["city"]])->one();
-		
-		$data = $this->find()->joinWith("users")->where(["recalls.id_city"=>$city_id])->all();
-		
-		return $data;
-	}
+
+    public function getRecalls()
+    {
+
+
+        $data = $this->getDb()->cache(function ($db) {
+
+            $city = IsYourCity::findOne(["name" => Yii::$app->session["city"]]);
+
+            return $this->find()->joinWith("users")->where(["recalls.id_city" => $city->id]);
+
+        });
+
+
+        $city = IsYourCity::findOne(["name" => Yii::$app->session["city"]]);
+
+        $count = $this->find()->joinWith("users")->where(["recalls.id_city" => $city->id])->count();
+
+
+        if(count($data) != $count){
+        $data = $this->find()->joinWith("users")->where(["recalls.id_city" => $city->id]);
+        }
+
+
+        if (isset($data)) {
+
+            $dataProvider = new ActiveDataProvider([
+                'query' => $data,
+                'pagination' => [
+                    'pageSize' => 20,
+                ],
+            ]);
+
+
+            return ["data" => $data, "dataProvider" => $dataProvider];
+        }
+
+
+    }
 }

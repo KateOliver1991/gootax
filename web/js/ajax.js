@@ -1,22 +1,27 @@
-			$.ajax({
-                type: "GET",
-                url: "/gootax/web/city/",
-                data: {},
-                dataType: "json",
-                success: function (data) {
 
 
-                    if (data) {
+setInterval(function() {
 
-                        location.reload();
+    $.ajax({
+        type: "GET",
+        url: "/gootax/web/city/check-session",
+        data: {},
+        async: true,
+        dataType: "json",
+        success: function (data) {
 
-                    } else {
 
-                    }
+            if (data) {
+
+                location.reload();
+
+            }
 
 
-                },
-                error: function (error) {
-                    console.log(error.status);
-                }
-            });
+        },
+        error: function (error) {
+            console.log(error.status);
+        }
+    });
+}, 4000);
+
