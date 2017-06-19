@@ -108,7 +108,7 @@ class CityController extends Controller
 
         $model = new IsYourCity();
 
-        $ip_info = $model->IP("91.146.47.85");
+        $ip_info = $model->IP("94.181.89.169");
 
         $model->city = $ip_info->city;
 
@@ -157,16 +157,17 @@ class CityController extends Controller
 
             $time = time() - Yii::$app->session["city"]["date"];
 
-
-            if ($time >= 2 * 3600) {
+            if ($time >= 2*3600) {
 
                 unset(Yii::$app->session["city"]);
 
-                Yii::$app->response->format = 'json';
-
-                return ['time' => $time];
+                return $this->redirect(["/city"]);
 
             }
+
+            Yii::$app->response->format = 'json';
+
+            return ['time' => $time];
 
 
         }
