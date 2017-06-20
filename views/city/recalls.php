@@ -1,5 +1,4 @@
 <?php
-
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\widgets\Pjax;
@@ -11,11 +10,11 @@ use yii\grid\GridView;
 ?>
 
 
-    <style>
-        th {
-            text-align: center;
-        }
-    </style>
+<style>
+    th {
+        text-align: center;
+    }
+</style>
 <?php
 
 /*
@@ -120,7 +119,7 @@ if (isset(Yii::$app->request->cookies["login"]) && !empty($model) && !empty($mod
     ?>
 
 
-    <?php Pjax::begin(); ?>
+
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -138,8 +137,6 @@ if (isset(Yii::$app->request->cookies["login"]) && !empty($model) && !empty($mod
     ]); ?>
 
 
-    <?php Pjax::end(); ?>
-
     <?php
     echo HTML::a("Добавить", "#", ["id" => "add_recall"]) . "\r\n";
 
@@ -147,34 +144,23 @@ if (isset(Yii::$app->request->cookies["login"]) && !empty($model) && !empty($mod
     ?>
 
 
-    <div style='display:none;' id='form_hide' class="row">
+    <div style='' id='form_hide' class="row">
 
-        <?php Pjax::begin(); ?>
 
         <?php
-        $form = ActiveForm::begin([
-            'options' => ['data-pjax' => true, 'timeout' => 5000],
 
+
+        $form = ActiveForm::begin([
             'action' => 'add-recall',
             'id' => 'add',
             'options' => ['class' => 'form-horizontal col-md-4 col-md-offset-4'],
         ]) ?>
         <?php
-
-        /*
-            echo $form->field($model, 'city')->widget(\yii\jui\AutoComplete::classname(), [
-                'clientOptions' => [
-                    'source' => $cities,
-                ],
-            ]);
-        */
         echo $form->field($model, 'city');
         echo $form->field($model, 'title');
         echo $form->field($model, 'text');
         echo $form->field($model, 'rating');
         echo $form->field($model, 'img');
-
-
         ?>
 
 
@@ -187,7 +173,6 @@ if (isset(Yii::$app->request->cookies["login"]) && !empty($model) && !empty($mod
 
         <?php ActiveForm::end() ?>
 
-        <?php Pjax::end(); ?>
 
     </div>
 
@@ -197,6 +182,10 @@ if (isset(Yii::$app->request->cookies["login"]) && !empty($model) && !empty($mod
     <div class='alert alert-info'>Войдите в свою учетную запись, чтобы видеть отзывы</div>
     <?php
 }
+
+
+?>
+
 
 
 

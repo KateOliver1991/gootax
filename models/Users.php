@@ -18,6 +18,8 @@ use Yii;
 class Users extends \yii\db\ActiveRecord
 {
 
+    const STATUS_ACTIVE = 1;
+
 
     public $password_repeat;
 
@@ -131,6 +133,17 @@ class Users extends \yii\db\ActiveRecord
         return $this->addError($attribute, 'Неправильный Email или пароль.');
 
 
+    }
+
+
+    public static function findByEmail($email)
+    {
+        return self::findOne(['email' => $email, 'status' => self::STATUS_ACTIVE]);
+    }
+
+    public function getId()
+    {
+        return $this->getPrimaryKey();
     }
 
 

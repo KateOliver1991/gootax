@@ -21,6 +21,9 @@ use yii\data\ActiveDataProvider;
  */
 class Recalls extends \yii\db\ActiveRecord
 {
+
+    public $_csrf;
+
     public $city;
 
     /**

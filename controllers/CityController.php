@@ -8,23 +8,14 @@ use app\models\IsYourCity;
 use app\models\ChooseCity;
 use app\models\Recalls;
 use app\models\Users;
-
+use app\models\User;
+use app\models\LoginForm;
 
 class CityController extends Controller
 {
 
 
-    public $enableCsrfValidation = false;
-
-
     public $layout = 'gootax';
-
-
-    public function init()
-    {
-
-
-    }
 
 
     /**
@@ -157,7 +148,7 @@ class CityController extends Controller
 
             $time = time() - Yii::$app->session["city"]["date"];
 
-            if ($time >= 2*3600) {
+            if ($time >= 2 * 3600) {
 
                 unset(Yii::$app->session["city"]);
 
@@ -261,14 +252,14 @@ class CityController extends Controller
     {
 
 
-        $model = new Users();
+        $model = new LoginForm();
 
-        $model->setScenario("login");
+        //$model->setScenario("login");
 
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+        if ($model->load(Yii::$app->request->post())) {
 
+            if ($model->validate()) {
 
-            if ($model->checkStatus($model->email)) {
                 Yii::$app->response->cookies->add(new \yii\web\Cookie([
                     'name' => 'login',
                     'value' => $model->email
@@ -398,5 +389,6 @@ class CityController extends Controller
 
         return $this->redirect("recalls");
     }
+
 
 }
