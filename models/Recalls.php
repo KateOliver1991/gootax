@@ -5,7 +5,7 @@ namespace app\models;
 use Yii;
 
 use yii\data\ActiveDataProvider;
-
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "recalls".
@@ -19,10 +19,8 @@ use yii\data\ActiveDataProvider;
  * @property integer $id_author
  * @property string $date_create
  */
-class Recalls extends \yii\db\ActiveRecord
+class Recalls extends ActiveRecord
 {
-
-    public $_csrf;
 
     public $city;
 
@@ -85,29 +83,16 @@ class Recalls extends \yii\db\ActiveRecord
         });
 
 
-        $city = IsYourCity::findOne(["name" => Yii::$app->session["city"]]);
-
-        $count = $this->find()->joinWith("users")->where(["recalls.id_city" => $city->id])->count();
-
-
-        if(count($data) != $count){
-        $data = $this->find()->joinWith("users")->where(["recalls.id_city" => $city->id]);
-        }
+        $dataProvider = new ActiveDataProvider([
+            'query' => $data,
+            'pagination' => [
+                'pageSize' => 20,
+            ],
+        ]);
 
 
-        if (isset($data)) {
-
-            $dataProvider = new ActiveDataProvider([
-                'query' => $data,
-                'pagination' => [
-                    'pageSize' => 20,
-                ],
-            ]);
-
-
-            return ["data" => $data, "dataProvider" => $dataProvider];
-        }
-
-
+        return ["data" => $data, "dataProvider" => $dataProvider];
     }
+
+
 }
