@@ -3,7 +3,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\widgets\Pjax;
 use yii\grid\GridView;
-
+use app\models\ChooseCity;
 
 /* @var $this yii\web\View */
 
@@ -185,9 +185,6 @@ if (isset(Yii::$app->request->cookies["login"]) && !empty($model) && !empty($mod
 
 
 ?>
-
-
-
 
 
 

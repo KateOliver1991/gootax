@@ -25,6 +25,8 @@ if (!empty($cities)) {
 ?>
 
 
+
+
 <div class="form-group">
     <div>
         <?= Html::submitButton('Выбрать', ['class' => 'btn btn-primary']) ?>

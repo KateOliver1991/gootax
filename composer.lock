@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "37c0d845ece8b7e9999f85f51809bdc7",
+    "content-hash": "4f81056c4984cd69cbaf88984395ef9f",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -332,6 +332,53 @@
                 "html"
             ],
             "time": "2017-03-13T06:30:53+00:00"
+        },
+        {
+            "name": "keltstr/yii2-simplehtmldom",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/keltstr/yii2-simplehtmldom.git",
+                "reference": "eaecdcce9fbbca8c655522b6516af9f7c1cb5164"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/keltstr/yii2-simplehtmldom/zipball/eaecdcce9fbbca8c655522b6516af9f7c1cb5164",
+                "reference": "eaecdcce9fbbca8c655522b6516af9f7c1cb5164",
+                "shasum": ""
+            },
+            "require": {
+                "yiisoft/yii2": "*"
+            },
+            "type": "yii2-extension",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.210.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "keltstr\\simplehtmldom\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "WTFPL"
+            ],
+            "authors": [
+                {
+                    "name": "keltstr",
+                    "email": "keltstr@gmail.com"
+                }
+            ],
+            "description": "\"PHP Simple HTML DOM Parser\" rev.210 adapted to Yii2 psr-4(namespace autoload class) based on serhatozles/yii2-simplehtmldom(rev.196)",
+            "keywords": [
+                "extension",
+                "simple_html_dom",
+                "simplehtmldom",
+                "yii2"
+            ],
+            "time": "2014-12-23 05:37:04"
         },
         {
             "name": "nirvana-msu/yii2-showloading",
@@ -3319,7 +3366,8 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "nirvana-msu/yii2-showloading": 20
+        "nirvana-msu/yii2-showloading": 20,
+        "keltstr/yii2-simplehtmldom": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

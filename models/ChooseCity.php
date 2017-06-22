@@ -2,6 +2,8 @@
 
 namespace app\models;
 
+use keltstr\simplehtmldom\SimpleHTMLDom as SHD;
+
 
 /**
  * This is the model class for table "cities".
@@ -14,7 +16,7 @@ class ChooseCity extends \yii\db\ActiveRecord
 {
 
 
-    public $city;
+    public $name;
 
 
     public function getRecalls()
@@ -35,7 +37,8 @@ class ChooseCity extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['city'], 'safe'],
+            [['name'], 'safe'],
+
         ];
     }
 
@@ -58,6 +61,9 @@ class ChooseCity extends \yii\db\ActiveRecord
 
         return $data;
     }
+
+
+
 
 
 }

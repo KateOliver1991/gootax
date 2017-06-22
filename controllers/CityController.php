@@ -10,6 +10,8 @@ use app\models\Recalls;
 use app\models\Users;
 use app\models\User;
 use app\models\LoginForm;
+use app\models\AddCity;
+use keltstr\simplehtmldom\SimpleHTMLDom as SHD;
 
 class CityController extends Controller
 {
@@ -175,7 +177,7 @@ class CityController extends Controller
         $model = new Recalls();
 
         if (isset($model->recalls)) {
-            return $this->render("recalls", ["model" => $model, "dataProvider" => $model->recalls["dataProvider"]]);
+            return $this->renderPartial("recalls", ["model" => $model, "dataProvider" => $model->recalls["dataProvider"]]);
         } else {
             return $this->render("recalls", ["template" => "<div class='alert alert-info'>Войдите в свою учетную запись, чтобы видеть отзывы</div>"]);
         }
@@ -326,18 +328,46 @@ class CityController extends Controller
 
         $model = new Recalls();
 
+        $model2 = new AddCity();
+
+
+
+
         if ($model->load(Yii::$app->request->post())) {
+
 
             $user = Users::findOne(["email" => YII::$app->request->cookies["login"]]);
             $model->id_author = $user->id;
             $city = ChooseCity::findOne(["name" => $model->city]);
-            $model->id_city = $city->id;
 
-            if ($model->save()) {
-                //return $this->redirect(["city/recalls"]);
-            } else {
-                var_dump($model->errors);
+          if(isset($city)){
+              $model->id_city = $city->id;
+          }else{
+
+              $model2->name = $model->city;
+
+              if($model2->save()) {
+
+                  $model->id_city = $model2->id;
+
+              }else{
+
+                  //var_dump($model2->getErrors());
+              }
+
+
+          }
+
+
+            if($model->save()){
+
+            }else{
+
+                //var_dump($model->getErrors());
             }
+
+
+
 
         }
 

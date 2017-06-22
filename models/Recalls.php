@@ -6,6 +6,7 @@ use Yii;
 
 use yii\data\ActiveDataProvider;
 use yii\db\ActiveRecord;
+use keltstr\simplehtmldom\SimpleHTMLDom as SHD;
 
 /**
  * This is the model class for table "recalls".
@@ -22,7 +23,9 @@ use yii\db\ActiveRecord;
 class Recalls extends ActiveRecord
 {
 
+
     public $city;
+
 
     /**
      * @inheritdoc
@@ -45,11 +48,13 @@ class Recalls extends ActiveRecord
     public function rules()
     {
         return [
-            [['city', 'title', 'text', 'rating', 'img'], 'required'],
+            ['city', 'checkCity'],
+            [['id_city','title', 'text', 'rating', 'img'], 'required'],
             [['id_city', 'rating', 'id_author'], 'integer'],
-            [['date_create'], 'safe'],
+            [['city','date_create'], 'safe'],
             [['title', 'text'], 'string', 'max' => 30],
             [['img'], 'string', 'max' => 11],
+
         ];
     }
 
@@ -93,6 +98,28 @@ class Recalls extends ActiveRecord
 
         return ["data" => $data, "dataProvider" => $dataProvider];
     }
+
+
+    public function checkCity($attr, $param)
+    {
+
+
+        $html = SHD::file_get_html('http://hramy.ru/regions/city_reg.htm');
+
+
+        foreach ($html->find('table[id=table2] tr') as $element) {
+            if (trim($element->first_child()->plaintext) != "Город") {
+                if ($this->city == $element->first_child()->plaintext) {
+                    return;
+                }
+            }
+        }
+
+        $this->addError($this->city, "нет такого города");
+
+
+    }
+
 
 
 }
