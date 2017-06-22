@@ -2,7 +2,7 @@ setInterval(function () {
 
     $.ajax({
         type: "GET",
-        url: "/gootax/web/city/check-session",
+        url: base + "/city/check-session",
         dataType: "json",
         success: function (data) {
             console.log(data);
@@ -13,4 +13,3 @@ setInterval(function () {
         }
     });
 }, 4000);
-

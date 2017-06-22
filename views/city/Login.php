@@ -14,7 +14,7 @@ $form = ActiveForm::begin([
 <?php
 
 echo $form->field($model, 'email');
-echo $form->field($model, 'password');
+echo $form->field($model, 'password')->input('password');;
 
 
 ?>

@@ -3,11 +3,13 @@
 /* @var $this \yii\web\View */
 /* @var $content string */
 
+
 use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
+use yii\helpers\Url;
 
 AppAsset::register($this);
 ?>
@@ -37,12 +39,12 @@ AppAsset::register($this);
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
             ['label' => 'Домой', 'url' => ['/city/']],
-			['label' => 'Отзывы', 'url' => ['/city/recalls']],
+            ['label' => 'Отзывы', 'url' => ['/city/recalls']],
             !isset(Yii::$app->request->cookies["login"]) ? (
-                ['label' => 'Login', 'url' => ['/city/login']]
+            ['label' => 'Login', 'url' => ['/city/login']]
             ) : (
                 '<li>'
-                . Html::a('Logout('.Yii::$app->request->cookies["login"].')', ['/city/logout'])
+                . Html::a('Logout(' . Yii::$app->request->cookies["login"] . ')', ['/city/logout'])
                 . '</li>'
             )
         ],
@@ -65,6 +67,14 @@ AppAsset::register($this);
         <p class="pull-right"><?= Yii::powered() ?></p>
     </div>
 </footer>
+
+
+<script>
+
+    var base = "<?=Url::base()?>";
+
+</script>
+
 
 <?php $this->endBody() ?>
 </body>

@@ -5,7 +5,7 @@
         event.preventDefault();
         $.ajax({
             type: "GET",
-            url: "/gootax/web/city/load-cities",
+            url: base+"/city/load-cities",
             data: {},
 
             dataType: "json",

@@ -11,7 +11,8 @@ use app\models\Users;
 use app\models\User;
 use app\models\LoginForm;
 use app\models\AddCity;
-use keltstr\simplehtmldom\SimpleHTMLDom as SHD;
+use yii\helpers\Url;
+use yii\helpers\BaseUrl;
 
 class CityController extends Controller
 {
@@ -132,7 +133,6 @@ class CityController extends Controller
 
             $this->view->registerJsFile('js/ajax.js');
 
-
         }
 
 
@@ -150,7 +150,7 @@ class CityController extends Controller
 
             $time = time() - Yii::$app->session["city"]["date"];
 
-            if ($time >= 2 * 3600) {
+            if ($time >= 2*3600) {
 
                 unset(Yii::$app->session["city"]);
 
@@ -177,7 +177,7 @@ class CityController extends Controller
         $model = new Recalls();
 
         if (isset($model->recalls)) {
-            return $this->renderPartial("recalls", ["model" => $model, "dataProvider" => $model->recalls["dataProvider"]]);
+            return $this->render("recalls", ["model" => $model, "dataProvider" => $model->recalls["dataProvider"]]);
         } else {
             return $this->render("recalls", ["template" => "<div class='alert alert-info'>Войдите в свою учетную запись, чтобы видеть отзывы</div>"]);
         }
@@ -331,8 +331,6 @@ class CityController extends Controller
         $model2 = new AddCity();
 
 
-
-
         if ($model->load(Yii::$app->request->post())) {
 
 
@@ -340,33 +338,31 @@ class CityController extends Controller
             $model->id_author = $user->id;
             $city = ChooseCity::findOne(["name" => $model->city]);
 
-          if(isset($city)){
-              $model->id_city = $city->id;
-          }else{
+            if (isset($city)) {
+                $model->id_city = $city->id;
+            } else {
 
-              $model2->name = $model->city;
+                $model2->name = $model->city;
 
-              if($model2->save()) {
+                if ($model2->save()) {
 
-                  $model->id_city = $model2->id;
+                    $model->id_city = $model2->id;
 
-              }else{
+                } else {
 
-                  //var_dump($model2->getErrors());
-              }
-
-
-          }
+                    //var_dump($model2->getErrors());
+                }
 
 
-            if($model->save()){
-
-            }else{
-
-                //var_dump($model->getErrors());
             }
 
 
+            if ($model->save()) {
+
+            } else {
+
+                //var_dump($model->getErrors());
+            }
 
 
         }
